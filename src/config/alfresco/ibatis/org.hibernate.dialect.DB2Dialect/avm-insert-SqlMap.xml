@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="alfresco.avm.insert">
+
+    <parameterMap id="parameter_NodePatternMap" type="AVMNode">
+        <parameter property="classType" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <parameter property="deletedType" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <parameter property="version" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <parameter property="storeNewId" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <parameter property="aclId" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <parameter property="guid" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <parameter property="owner" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <parameter property="creator" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <parameter property="createdDate" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <parameter property="modifier" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <parameter property="modifiedDate" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <parameter property="accessDate" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <parameter property="isRoot" jdbcType="BIT" javaType="java.lang.Boolean"/>
+        <parameter property="layerId" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <parameter property="indirection" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <parameter property="indirectionVersion" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <parameter property="primaryIndirection" jdbcType="BIT" javaType="java.lang.Boolean"/>
+        <parameter property="opacity" jdbcType="BIT" javaType="java.lang.Boolean"/>        
+        <parameter property="contentUrl" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <parameter property="mimetype" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <parameter property="encoding" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <parameter property="length" jdbcType="BIGINT" javaType="java.lang.Long"/>
+    </parameterMap>
+
+	<parameterMap id="parameter_AVMVersionRoot" type="AVMVersionRoot">
+        <parameter property="storeId" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <parameter property="rootNodeId" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <parameter property="version" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <parameter property="creator" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <parameter property="createdDate" jdbcType="BIGINT" javaType="java.lang.Long"/>
+        <parameter property="tag" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <parameter property="description" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    </parameterMap>
+
+    <insert id="insert_AVMStore" parameterType="AVMStore">
+        <include refid="alfresco.avm.insert_AVMStore_AutoIncrement"/>
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            VALUES IDENTITY_VAL_LOCAL()
+        </selectKey>
+    </insert>
+    
+    <insert id="insert_AVMStoreProperty" parameterMap="alfresco.avm.parameter_StorePropertyPatternMap">
+        <include refid="alfresco.avm.insert_AVMStoreProperty_AutoIncrement"/>
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            VALUES IDENTITY_VAL_LOCAL()
+        </selectKey>
+    </insert>
+    
+    <insert id="insert_AVMNode" parameterMap="parameter_NodePatternMap">
+        insert into avm_nodes (class_type, deletedType, version_id, vers, store_new_id, acl_id, guid, owner, creator, createDate, lastModifier, modDate, accessDate, is_root, layer_id, indirection, indirection_version, primary_indirection, opacity, content_url, mime_type, encoding, length)
+        values (?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            VALUES IDENTITY_VAL_LOCAL()
+        </selectKey>
+    </insert>
+    
+    <insert id="insert_AVMVersionRoot" parameterMap="parameter_AVMVersionRoot">
+        insert into avm_version_roots (avm_store_id, root_id, version_id, creator, create_date, tag, description)
+        values (?, ?, ?, ?, ?, ?, ?)
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            VALUES IDENTITY_VAL_LOCAL()
+        </selectKey>
+    </insert>
+    
+</mapper>
